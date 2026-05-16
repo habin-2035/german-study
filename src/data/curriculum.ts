@@ -1,9 +1,12 @@
 import type { LektionData } from "@/types";
 
+const A1 = "A1" as const;
+
 export const curriculum: LektionData[] = [
   // ─── BAND 1 ───────────────────────────────────────────────────────────────
   {
     id: 1,
+    level: A1,
     band: 1,
     title: "알파벳과 발음 익히기",
     vocabulary: [
@@ -1608,8 +1611,12 @@ export function getLektionById(id: number): LektionData | undefined {
   return curriculum.find((l) => l.id === id);
 }
 
-export function getLektionsByBand(band: number): LektionData[] {
-  return curriculum.filter((l) => l.band === band);
+export function getLektionsByBand(band: number, level?: string): LektionData[] {
+  return curriculum.filter((l) => l.band === band && (!level || (l.level ?? "A1") === level));
+}
+
+export function getLektionsByLevel(level: string): LektionData[] {
+  return curriculum.filter((l) => (l.level ?? "A1") === level);
 }
 
 export const TOTAL_BANDS = 8;

@@ -22,8 +22,11 @@ export type GrammarNote = {
   content: string;
 };
 
+export type Level = "A1" | "A2" | "B1";
+
 export type LektionData = {
   id: number;
+  level?: Level;
   band: number;
   title: string;
   subtitle?: string;
