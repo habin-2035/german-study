@@ -21,9 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${noto.variable} h-full`}>
-      <body className="min-h-full bg-gray-50 font-[var(--font-noto)]">
+      <body className="min-h-full font-[var(--font-noto)]">
         <Navigation />
-        <main className="max-w-2xl mx-auto px-4 py-6">{children}</main>
+        <main className="max-w-2xl mx-auto px-4 py-6 pb-16">{children}</main>
       </body>
     </html>
   );

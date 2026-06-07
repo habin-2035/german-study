@@ -27,7 +27,7 @@ export default function BandPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Link href="/" className="text-sm text-slate-400 hover:text-blue-500 transition-colors w-fit">
+      <Link href="/" className="text-sm text-slate-400 hover:text-indigo-500 transition-colors w-fit">
         ← 홈
       </Link>
 
@@ -66,7 +66,7 @@ export default function BandPage() {
                 {/* Number */}
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${
                   isCompleted ? "bg-emerald-100 text-emerald-600" :
-                  isStudied ? "bg-blue-50 text-blue-500" :
+                  isStudied ? "bg-indigo-50 text-indigo-500" :
                   "bg-slate-100 text-slate-400"
                 }`}>
                   {isCompleted ? "✓" : String(lektion.id).padStart(2, "0")}
@@ -92,7 +92,7 @@ export default function BandPage() {
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   {p?.videoWatched && <span className="text-xs bg-violet-50 text-violet-400 px-1.5 py-0.5 rounded-md font-medium">▶</span>}
                   {p?.note && <span className="text-xs bg-amber-50 text-amber-500 px-1.5 py-0.5 rounded-md">✎</span>}
-                  {p?.quizScore > 0 && <span className="text-xs bg-blue-50 text-blue-400 px-1.5 py-0.5 rounded-md">{p.quizScore}점</span>}
+                  {p?.quizScore > 0 && <span className="text-xs bg-indigo-50 text-indigo-400 px-1.5 py-0.5 rounded-md">{p.quizScore}점</span>}
                 </div>
 
                 <span className="text-slate-300 text-sm flex-shrink-0">›</span>

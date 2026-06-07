@@ -62,7 +62,7 @@ export default function PracticePage() {
       <div className="flex flex-col gap-4">
         <button
           onClick={() => setMode("select")}
-          className="text-sm text-slate-400 hover:text-blue-500 transition-colors w-fit"
+          className="text-sm text-slate-400 hover:text-indigo-500 transition-colors w-fit"
         >
           ← 범위 선택으로
         </button>
@@ -76,7 +76,7 @@ export default function PracticePage() {
           </div>
           <span className={`text-xs px-2.5 py-1 rounded-lg font-semibold ${
             practiceType === "flashcard"
-              ? "bg-blue-50 text-blue-600"
+              ? "bg-indigo-50 text-indigo-600"
               : "bg-violet-50 text-violet-600"
           }`}>
             {practiceType === "flashcard" ? "🃏 플래시카드" : "📝 퀴즈"}
@@ -108,7 +108,7 @@ export default function PracticePage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-black text-slate-900">묶음 연습</h1>
+          <h1 className="text-2xl font-black tracking-tight text-slate-900">묶음 연습</h1>
           <p className="text-sm text-slate-400 mt-0.5">원하는 강을 골라서 한번에 연습하세요</p>
         </div>
         <div className="flex gap-1.5 text-xs">
@@ -125,8 +125,8 @@ export default function PracticePage() {
             onClick={() => setPracticeType(t)}
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               practiceType === t
-                ? "bg-blue-600 text-white shadow-sm"
-                : "bg-white text-slate-400 border border-slate-200 hover:border-blue-300 hover:text-blue-500"
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "bg-white text-slate-400 border border-slate-200 hover:border-indigo-300 hover:text-indigo-500"
             }`}
           >
             {t === "flashcard" ? "🃏 플래시카드" : "📝 퀴즈"}
@@ -221,7 +221,7 @@ export default function PracticePage() {
           disabled={allCards.length < 2}
           className={`w-full py-4 rounded-2xl text-sm font-bold transition-all shadow-lg ${
             allCards.length >= 2
-              ? "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-200"
+              ? "btn-primary"
               : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
           }`}
         >

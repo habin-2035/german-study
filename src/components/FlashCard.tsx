@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import type { VocabItem, Expression } from "@/types";
+import SpeakerButton from "@/components/SpeakerButton";
 
 type Card = VocabItem | Expression;
 
@@ -32,7 +33,7 @@ export default function FlashCard({ cards, known, onKnownChange }: Props) {
       <p className="font-bold text-slate-700">모든 카드를 알고 있어요!</p>
       <button
         onClick={() => { setShowAll(true); setIndex(0); setFlipped(false); }}
-        className="text-sm text-blue-500 underline"
+        className="text-sm text-indigo-500 underline"
       >
         처음부터 다시
       </button>
@@ -85,7 +86,7 @@ export default function FlashCard({ cards, known, onKnownChange }: Props) {
           {/* 방향 전환 버튼 */}
           <button
             onClick={toggleDirection}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 transition-colors font-medium"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium"
           >
             <span>{direction}</span>
             <span>⇄</span>
@@ -106,17 +107,23 @@ export default function FlashCard({ cards, known, onKnownChange }: Props) {
       >
         <div className={`flip-inner w-full h-full ${flipped ? "flipped" : ""}`}>
           {/* Front */}
-          <div className="flip-face absolute inset-0 card flex flex-col items-center justify-center gap-2 p-6 border-2 border-slate-100">
+          <div className="flip-face absolute inset-0 card flex flex-col items-center justify-center gap-2 p-6">
             <span className="absolute top-3 left-4 text-xs font-bold text-slate-300">{frontLabel}</span>
-            {isKnown && <span className="absolute top-3 right-4 text-xs text-emerald-400 font-medium">✓ 숙지</span>}
-            <p className="text-2xl font-bold text-slate-800 text-center leading-snug">{front}</p>
-            <p className="text-xs text-slate-300 mt-1">탭해서 뒤집기</p>
+            {isKnown && <span className="absolute top-3 right-4 text-xs text-emerald-500 font-medium">✓ 숙지</span>}
+            <p className="text-[1.7rem] font-bold text-slate-800 text-center leading-snug">{front}</p>
+            <div className="absolute bottom-4 flex items-center gap-2">
+              <SpeakerButton text={card.german} size="sm" />
+              <span className="text-xs text-slate-300">탭해서 뒤집기</span>
+            </div>
           </div>
           {/* Back */}
-          <div className="flip-face flip-back absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-2 p-6 bg-blue-600">
-            <span className="absolute top-3 left-4 text-xs font-bold text-blue-300">{backLabel}</span>
-            <p className="text-2xl font-bold text-white text-center leading-snug">{back}</p>
-            {note && <p className="text-xs text-blue-200 bg-blue-500/50 px-2 py-0.5 rounded-md">{note}</p>}
+          <div className="flip-face flip-back absolute inset-0 rounded-[18px] flex flex-col items-center justify-center gap-2 p-6 bg-gradient-to-br from-indigo-500 to-indigo-700">
+            <span className="absolute top-3 left-4 text-xs font-bold text-indigo-200">{backLabel}</span>
+            <p className="text-[1.7rem] font-bold text-white text-center leading-snug">{back}</p>
+            {note && <p className="text-xs text-indigo-100 bg-white/15 px-2 py-0.5 rounded-md">{note}</p>}
+            <div className="absolute bottom-4">
+              <SpeakerButton text={card.german} size="sm" className="bg-white/15 border-white/25 text-white hover:bg-white/25 hover:text-white hover:border-white/40" />
+            </div>
           </div>
         </div>
       </div>

@@ -1,43 +1,112 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f8fafc;
+  /* Surfaces */
+  --bg: #fbfcfe;
+  --bg-soft: #f4f6fb;
   --card: #ffffff;
-  --primary: #2563eb;
-  --primary-light: #eff6ff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
+  --border: #eaedf4;
+  --border-strong: #dde1ec;
+
+  /* Brand — refined indigo */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-soft: #eef0ff;
+  --primary-ring: rgba(79, 70, 229, 0.18);
+
+  /* Text */
+  --text: #0d1220;
+  --text-soft: #475069;
+  --muted: #8a93a8;
+
+  /* Accents */
+  --success: #0fa97a;
+  --success-soft: #e6f8f1;
+  --warn: #e0a020;
+  --warn-soft: #fdf5e3;
+  --danger: #e1556b;
+  --danger-soft: #fdeef0;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
+html {
+  scroll-behavior: smooth;
 }
 
+body {
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #eef1fb 0%, transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv01";
+}
+
+/* ── Cards ─────────────────────────────────────────── */
 .card {
   background: var(--card);
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 6px 16px -10px rgba(16, 24, 40, 0.10);
 }
 
 .card-hover {
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: box-shadow 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
 }
 .card-hover:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,.10);
-  transform: translateY(-1px);
+  box-shadow:
+    0 2px 4px rgba(16, 24, 40, 0.05),
+    0 18px 40px -18px rgba(79, 70, 229, 0.28);
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+.card-hover:active {
+  transform: translateY(0);
 }
 
-/* Flip card */
-.flip-card { perspective: 1000px; }
+/* ── Buttons / chips ───────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(180deg, #5a51ea 0%, var(--primary) 100%);
+  color: #fff;
+  box-shadow: 0 8px 20px -8px var(--primary-ring), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.btn-primary:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 12px 26px -8px var(--primary-ring), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ── Focus ─────────────────────────────────────────── */
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primary-ring);
+}
+
+/* ── Flip card ─────────────────────────────────────── */
+.flip-card { perspective: 1200px; }
 .flip-inner {
-  transition: transform 0.45s cubic-bezier(.4,0,.2,1);
+  transition: transform 0.5s cubic-bezier(.34, 1.2, .42, 1);
   transform-style: preserve-3d;
   position: relative;
 }
@@ -48,7 +117,41 @@ body {
 }
 .flip-back { transform: rotateY(180deg); }
 
-/* Smooth progress bar */
+/* ── Progress bar ──────────────────────────────────── */
 .progress-bar {
-  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  transition: width 0.7s cubic-bezier(.4, 0, .2, 1);
 }
+
+/* ── Entrance animations ───────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fadeUp 0.4s cubic-bezier(.4, 0, .2, 1) both;
+}
+
+@keyframes pop {
+  0%   { transform: scale(0.92); opacity: 0; }
+  60%  { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.pop { animation: pop 0.32s cubic-bezier(.34, 1.4, .5, 1) both; }
+
+/* speaker pulse while playing */
+@keyframes soundPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.sound-playing { animation: soundPulse 0.8s ease-in-out infinite; }
+
+/* shake on wrong answer */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+.shake { animation: shake 0.35s ease-in-out; }
+
+/* ── Scrollbar ─────────────────────────────────────── */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }

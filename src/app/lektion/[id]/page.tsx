@@ -13,6 +13,7 @@ import {
 } from "@/lib/storage";
 import FlashCard from "@/components/FlashCard";
 import QuizComponent from "@/components/QuizComponent";
+import SpeakerButton from "@/components/SpeakerButton";
 import type { LektionProgress } from "@/types";
 
 type Tab = "표현" | "플래시카드" | "퀴즈" | "메모";
@@ -71,7 +72,7 @@ export default function LektionPage() {
   return (
     <div className="flex flex-col gap-4">
       {/* Back */}
-      <Link href={`/band/${lektion.band}`} className="text-sm text-slate-400 hover:text-blue-500 transition-colors w-fit">
+      <Link href={`/band/${lektion.band}`} className="text-sm text-slate-400 hover:text-indigo-500 transition-colors w-fit">
         ← BAND {lektion.band}
       </Link>
 
@@ -114,7 +115,7 @@ export default function LektionPage() {
             ▶ {prog.videoWatched ? "영상 시청 완료" : "영상 미시청"}
           </button>
           {prog.quizScore > 0 && (
-            <span className="text-xs text-blue-500 bg-blue-50 px-2.5 py-1.5 rounded-lg font-medium">
+            <span className="text-xs text-indigo-500 bg-indigo-50 px-2.5 py-1.5 rounded-lg font-medium">
               📝 최고 {prog.quizScore}점
             </span>
           )}
@@ -153,12 +154,13 @@ export default function LektionPage() {
                 <div className="flex flex-col gap-0.5">
                   {lektion.expressions.map((expr, i) => (
                     <div key={i} className="flex items-start gap-3 py-3 border-b border-slate-50 last:border-0">
-                      <div className="flex-1">
+                      <SpeakerButton text={expr.german} size="sm" />
+                      <div className="flex-1 min-w-0">
                         <p className="font-semibold text-slate-800">{expr.german}</p>
                         <p className="text-slate-500 text-sm mt-0.5">{expr.korean}</p>
                       </div>
                       {expr.note && (
-                        <span className="text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-lg flex-shrink-0">
+                        <span className="text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-lg flex-shrink-0">
                           {expr.note}
                         </span>
                       )}
@@ -173,9 +175,12 @@ export default function LektionPage() {
                 <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-3">단어</h2>
                 <div className="grid grid-cols-2 gap-2">
                   {lektion.vocabulary.map((v, i) => (
-                    <div key={i} className="bg-slate-50 rounded-xl p-3 hover:bg-blue-50 transition-colors">
-                      <p className="font-semibold text-slate-800 text-sm">{v.german}</p>
-                      <p className="text-slate-400 text-xs mt-0.5">{v.korean}</p>
+                    <div key={i} className="bg-slate-50 rounded-xl p-3 hover:bg-indigo-50 transition-colors flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="font-semibold text-slate-800 text-sm">{v.german}</p>
+                        <p className="text-slate-400 text-xs mt-0.5">{v.korean}</p>
+                      </div>
+                      <SpeakerButton text={v.german} size="sm" />
                     </div>
                   ))}
                 </div>
@@ -191,17 +196,20 @@ export default function LektionPage() {
                       {conv.map((line, li) => (
                         <div key={li} className={`flex gap-2 ${line.speaker === "B" ? "flex-row-reverse" : ""}`}>
                           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                            line.speaker === "A" ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-600"
+                            line.speaker === "A" ? "bg-indigo-600 text-white" : "bg-slate-200 text-slate-600"
                           }`}>
                             {line.speaker}
                           </div>
                           <div className={`max-w-[78%] flex flex-col gap-0.5 ${line.speaker === "B" ? "items-end" : "items-start"}`}>
-                            <div className={`px-3.5 py-2 rounded-2xl text-sm ${
-                              line.speaker === "A"
-                                ? "bg-blue-600 text-white rounded-tl-sm"
-                                : "bg-white border border-slate-200 text-slate-800 rounded-tr-sm"
-                            }`}>
-                              {line.german}
+                            <div className={`flex items-center gap-1.5 ${line.speaker === "B" ? "flex-row-reverse" : ""}`}>
+                              <div className={`px-3.5 py-2 rounded-2xl text-sm ${
+                                line.speaker === "A"
+                                  ? "bg-indigo-600 text-white rounded-tl-sm"
+                                  : "bg-white border border-slate-200 text-slate-800 rounded-tr-sm"
+                              }`}>
+                                {line.german}
+                              </div>
+                              <SpeakerButton text={line.german} size="sm" />
                             </div>
                             <p className="text-xs text-slate-400 px-1">{line.korean}</p>
                           </div>
@@ -247,7 +255,7 @@ export default function LektionPage() {
             <textarea
               value={noteDraft}
               onChange={(e) => setNoteDraft(e.target.value)}
-              className="w-full h-48 border border-slate-200 rounded-xl p-3.5 text-sm text-slate-700 resize-none focus:outline-none focus:border-blue-300 transition-colors"
+              className="w-full h-48 border border-slate-200 rounded-xl p-3.5 text-sm text-slate-700 resize-none focus:outline-none focus:border-indigo-300 transition-colors"
               placeholder="메모를 입력하세요..."
             />
             <button
@@ -255,7 +263,7 @@ export default function LektionPage() {
               className={`self-end px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                 noteSaved
                   ? "bg-emerald-100 text-emerald-600"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
+                  : "btn-primary"
               }`}
             >
               {noteSaved ? "저장됨 ✓" : "저장"}
@@ -267,12 +275,12 @@ export default function LektionPage() {
       {/* Prev / Next */}
       <div className="flex items-center justify-between pb-4">
         {prevId ? (
-          <Link href={`/lektion/${prevId}`} className="flex items-center gap-1 text-sm text-slate-400 hover:text-blue-500 transition-colors">
+          <Link href={`/lektion/${prevId}`} className="flex items-center gap-1 text-sm text-slate-400 hover:text-indigo-500 transition-colors">
             ← L{String(prevId).padStart(2, "0")}
           </Link>
         ) : <span />}
         {nextId ? (
-          <Link href={`/lektion/${nextId}`} className="flex items-center gap-1 text-sm text-slate-400 hover:text-blue-500 transition-colors">
+          <Link href={`/lektion/${nextId}`} className="flex items-center gap-1 text-sm text-slate-400 hover:text-indigo-500 transition-colors">
             L{String(nextId).padStart(2, "0")} →
           </Link>
         ) : <span />}
