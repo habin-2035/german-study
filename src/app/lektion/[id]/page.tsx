@@ -14,6 +14,15 @@ import {
 import FlashCard from "@/components/FlashCard";
 import QuizComponent from "@/components/QuizComponent";
 import SpeakerButton from "@/components/SpeakerButton";
+import AddItemForm, { type NewItem } from "@/components/AddItemForm";
+import {
+  getUserContent,
+  addUserExpression,
+  addUserVocab,
+  removeUserExpression,
+  removeUserVocab,
+  type UserContent,
+} from "@/lib/userContent";
 import type { LektionProgress } from "@/types";
 
 type Tab = "표현" | "플래시카드" | "퀴즈" | "메모";
@@ -30,18 +39,47 @@ export default function LektionPage() {
   });
   const [noteDraft, setNoteDraft] = useState("");
   const [noteSaved, setNoteSaved] = useState(false);
+  const [userContent, setUserContent] = useState<UserContent>({
+    expressions: [],
+    vocabulary: [],
+  });
 
   useEffect(() => {
     const p = getLektionProgress(lektionId);
     setProg(p);
     setNoteDraft(p.note);
+    setUserContent(getUserContent(lektionId));
   }, [lektionId]);
 
   if (!lektion) return (
     <div className="text-center py-20 text-slate-400">Lektion을 찾을 수 없습니다.</div>
   );
 
-  const allCards = [...lektion.expressions, ...lektion.vocabulary];
+  const allExpressions = [...lektion.expressions, ...userContent.expressions];
+  const allVocabulary = [...lektion.vocabulary, ...userContent.vocabulary];
+  const allCards = [...allExpressions, ...allVocabulary];
+
+  function handleAddItem(item: NewItem) {
+    if (item.kind === "표현") {
+      setUserContent(
+        addUserExpression(lektionId, {
+          german: item.german,
+          korean: item.korean,
+          note: item.note,
+        })
+      );
+    } else {
+      setUserContent(
+        addUserVocab(lektionId, { german: item.german, korean: item.korean })
+      );
+    }
+  }
+  function handleRemoveExpression(index: number) {
+    setUserContent(removeUserExpression(lektionId, index));
+  }
+  function handleRemoveVocab(index: number) {
+    setUserContent(removeUserVocab(lektionId, index));
+  }
 
   function handleToggleCompleted() {
     toggleCompleted(lektionId);
@@ -148,12 +186,12 @@ export default function LektionPage() {
       <div className="card p-5">
         {tab === "표현" && (
           <div className="flex flex-col gap-6">
-            {lektion.expressions.length > 0 && (
+            {allExpressions.length > 0 && (
               <section>
                 <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-3">핵심 표현</h2>
                 <div className="flex flex-col gap-0.5">
                   {lektion.expressions.map((expr, i) => (
-                    <div key={i} className="flex items-start gap-3 py-3 border-b border-slate-50 last:border-0">
+                    <div key={`b${i}`} className="flex items-start gap-3 py-3 border-b border-slate-50 last:border-0">
                       <SpeakerButton text={expr.german} size="sm" />
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-slate-800">{expr.german}</p>
@@ -166,16 +204,40 @@ export default function LektionPage() {
                       )}
                     </div>
                   ))}
+                  {userContent.expressions.map((expr, i) => (
+                    <div key={`u${i}`} className="flex items-start gap-3 py-3 border-b border-slate-50 last:border-0">
+                      <SpeakerButton text={expr.german} size="sm" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-semibold text-slate-800">{expr.german}</p>
+                          <span className="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md flex-shrink-0">내 추가</span>
+                        </div>
+                        <p className="text-slate-500 text-sm mt-0.5">{expr.korean}</p>
+                      </div>
+                      {expr.note && (
+                        <span className="text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-lg flex-shrink-0">
+                          {expr.note}
+                        </span>
+                      )}
+                      <button
+                        onClick={() => handleRemoveExpression(i)}
+                        className="flex-shrink-0 text-slate-300 hover:text-rose-500 transition-colors text-sm leading-none px-1"
+                        aria-label="삭제"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </section>
             )}
 
-            {lektion.vocabulary.length > 0 && (
+            {allVocabulary.length > 0 && (
               <section>
                 <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-3">단어</h2>
                 <div className="grid grid-cols-2 gap-2">
                   {lektion.vocabulary.map((v, i) => (
-                    <div key={i} className="bg-slate-50 rounded-xl p-3 hover:bg-indigo-50 transition-colors flex items-start justify-between gap-2">
+                    <div key={`b${i}`} className="bg-slate-50 rounded-xl p-3 hover:bg-indigo-50 transition-colors flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="font-semibold text-slate-800 text-sm">{v.german}</p>
                         <p className="text-slate-400 text-xs mt-0.5">{v.korean}</p>
@@ -183,9 +245,29 @@ export default function LektionPage() {
                       <SpeakerButton text={v.german} size="sm" />
                     </div>
                   ))}
+                  {userContent.vocabulary.map((v, i) => (
+                    <div key={`u${i}`} className="bg-emerald-50/50 ring-1 ring-emerald-100 rounded-xl p-3 hover:bg-emerald-50 transition-colors flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="font-semibold text-slate-800 text-sm">{v.german}</p>
+                        <p className="text-slate-400 text-xs mt-0.5">{v.korean}</p>
+                      </div>
+                      <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                        <SpeakerButton text={v.german} size="sm" />
+                        <button
+                          onClick={() => handleRemoveVocab(i)}
+                          className="text-slate-300 hover:text-rose-500 transition-colors text-xs leading-none"
+                          aria-label="삭제"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </section>
             )}
+
+            <AddItemForm onAdd={handleAddItem} />
 
             {lektion.conversations.length > 0 && (
               <section>
@@ -235,8 +317,10 @@ export default function LektionPage() {
               </section>
             )}
 
-            {lektion.expressions.length === 0 && lektion.vocabulary.length === 0 && (
-              <p className="text-center text-slate-400 text-sm py-8">내용을 준비 중입니다.</p>
+            {allExpressions.length === 0 && allVocabulary.length === 0 && (
+              <p className="text-center text-slate-400 text-sm py-2">
+                아직 표현·단어가 없어요. 직접 추가해 보세요.
+              </p>
             )}
           </div>
         )}
