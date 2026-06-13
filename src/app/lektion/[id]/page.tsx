@@ -15,6 +15,7 @@ import FlashCard from "@/components/FlashCard";
 import QuizComponent from "@/components/QuizComponent";
 import SpeakerButton from "@/components/SpeakerButton";
 import AddItemForm, { type NewItem } from "@/components/AddItemForm";
+import GermanKeys from "@/components/GermanKeys";
 import {
   getUserContent,
   addUserExpression,
@@ -39,6 +40,7 @@ export default function LektionPage() {
   });
   const [noteDraft, setNoteDraft] = useState("");
   const [noteSaved, setNoteSaved] = useState(false);
+  const noteRef = useRef<HTMLTextAreaElement>(null);
   const [userContent, setUserContent] = useState<UserContent>({
     expressions: [],
     vocabulary: [],
@@ -337,11 +339,13 @@ export default function LektionPage() {
           <div className="flex flex-col gap-3">
             <p className="text-xs text-slate-400">이 강의 메모를 남겨보세요.</p>
             <textarea
+              ref={noteRef}
               value={noteDraft}
               onChange={(e) => setNoteDraft(e.target.value)}
               className="w-full h-48 border border-slate-200 rounded-xl p-3.5 text-sm text-slate-700 resize-none focus:outline-none focus:border-indigo-300 transition-colors"
               placeholder="메모를 입력하세요..."
             />
+            <GermanKeys targetRef={noteRef} onChange={setNoteDraft} />
             <button
               onClick={handleSaveNote}
               className={`self-end px-4 py-2 rounded-xl text-sm font-semibold transition-all ${

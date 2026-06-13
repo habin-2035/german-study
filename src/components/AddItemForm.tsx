@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import GermanKeys from "@/components/GermanKeys";
 
 type Kind = "표현" | "단어";
 
@@ -20,6 +21,7 @@ export default function AddItemForm({
   const [german, setGerman] = useState("");
   const [korean, setKorean] = useState("");
   const [note, setNote] = useState("");
+  const germanRef = useRef<HTMLInputElement>(null);
 
   function reset() {
     setGerman("");
@@ -71,11 +73,13 @@ export default function AddItemForm({
       </div>
 
       <input
+        ref={germanRef}
         value={german}
         onChange={(e) => setGerman(e.target.value)}
         placeholder={kind === "표현" ? "독일어 표현 (예: Ich bin Arzt.)" : "독일어 단어 (예: der Arzt)"}
         className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-indigo-300 transition-colors"
       />
+      <GermanKeys targetRef={germanRef} onChange={setGerman} />
       <input
         value={korean}
         onChange={(e) => setKorean(e.target.value)}

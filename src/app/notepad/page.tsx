@@ -1,13 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { curriculum } from "@/data/curriculum";
 import { getAllProgress } from "@/lib/storage";
+import GermanKeys from "@/components/GermanKeys";
 
 export default function NotepadPage() {
   const [notes, setNotes] = useState<Record<number, string>>({});
   const [globalNote, setGlobalNote] = useState("");
   const [globalSaved, setGlobalSaved] = useState(false);
+  const globalRef = useRef<HTMLTextAreaElement>(null);
 
   const GLOBAL_KEY = "gs_global_note";
 
@@ -37,11 +39,15 @@ export default function NotepadPage() {
       <div className="card p-5">
         <h2 className="text-sm font-bold text-slate-600 mb-2">전체 메모</h2>
         <textarea
+          ref={globalRef}
           value={globalNote}
           onChange={(e) => setGlobalNote(e.target.value)}
           className="w-full h-32 border border-slate-200 rounded-xl p-3 text-sm text-slate-700 resize-none focus:outline-none focus:border-indigo-300 transition-colors"
           placeholder="자유롭게 메모하세요..."
         />
+        <div className="mt-2">
+          <GermanKeys targetRef={globalRef} onChange={setGlobalNote} />
+        </div>
         <button
           onClick={saveGlobal}
           className={`mt-2 float-right px-4 py-1.5 text-sm rounded-xl font-semibold transition-all ${
