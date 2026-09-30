@@ -1,6 +1,7 @@
 "use client";
 
 import { curriculum } from "@/data/curriculum";
+import { isRuleItem } from "@/lib/german";
 import type { SrsCard, SrsDeck, SrsGrade, DailyStore, DailyLog } from "@/types";
 
 const SRS_KEY = "gs_srs_v1";
@@ -33,7 +34,14 @@ function daysBetween(from: string, to: string): number {
 }
 
 // ── 전역 카드 목록 (교재 순서, german 기준 중복 제거) ─────
-export type GlobalCard = { german: string; korean: string; note?: string; lektionId: number };
+export type GlobalCard = {
+  german: string;
+  korean: string;
+  note?: string;
+  example?: string;
+  exampleKorean?: string;
+  lektionId: number;
+};
 
 let _globalCards: GlobalCard[] | null = null;
 export function getAllCards(): GlobalCard[] {
@@ -43,18 +51,26 @@ export function getAllCards(): GlobalCard[] {
   for (const lek of curriculum) {
     for (const c of [...lek.expressions, ...lek.vocabulary]) {
       const g = c.german.trim();
-      if (!g || seen.has(g)) continue;
+      if (!g || seen.has(g) || isRuleItem(g)) continue;
       seen.add(g);
+      const extra = c as { note?: string; example?: string; exampleKorean?: string };
       out.push({
         german: g,
         korean: c.korean,
-        note: (c as { note?: string }).note,
+        note: extra.note,
+        example: extra.example,
+        exampleKorean: extra.exampleKorean,
         lektionId: lek.id,
       });
     }
   }
   _globalCards = out;
   return out;
+}
+
+/** german 원문으로 전역 카드 찾기 (예문 등 최신 교재 정보 포함) */
+export function findCard(german: string): GlobalCard | undefined {
+  return getAllCards().find((c) => c.german === german.trim());
 }
 
 // ── 덱 저장/로드 ──────────────────────────────────────────
@@ -251,7 +267,7 @@ export function gradeCard(card: GlobalCard, grade: SrsGrade): SrsCard {
 /** 사람이 읽기 쉬운 다음 복습 간격 텍스트 */
 export function intervalLabel(grade: SrsGrade, card?: SrsCard): string {
   // 버튼에 미리보기로 보여줄 대략적 간격
-  if (grade === "again") return "10분";
+  if (grade === "again") return "곧 다시";
   const reps = card?.reps ?? 0;
   const ease = card?.ease ?? 2.3;
   const prev = card?.intervalDays ?? 0;
@@ -265,3 +281,70 @@ export function intervalLabel(grade: SrsGrade, card?: SrsCard): string {
 }
 
 export { daysBetween };
+
+// ── 학습 세션 큐 ──────────────────────────────────────────
+export type SessionItem = {
+  card: GlobalCard;
+  /** intro = 새 카드 소개, test = 떠올리기 */
+  stage: "intro" | "test";
+  isNew: boolean;
+  /** 복습 예정일이 아닌 카드를 연습 삼아 푸는 경우 → 일정에 반영하지 않음 */
+  practice?: boolean;
+  /** 이번 세션에서 틀려서 다시 나온 카드 → 일정은 이미 반영됨 */
+  retry?: boolean;
+};
+
+function shuffleArr<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/** 복습 카드 사이사이에 새 카드를 섞는다 (복습 3장마다 새 카드 1장) */
+function interleave(reviews: SessionItem[], news: SessionItem[]): SessionItem[] {
+  const out: SessionItem[] = [];
+  let r = 0, n = 0;
+  while (r < reviews.length || n < news.length) {
+    for (let k = 0; k < 3 && r < reviews.length; k++) out.push(reviews[r++]);
+    if (n < news.length) out.push(news[n++]);
+  }
+  return out;
+}
+
+/** 오늘의 학습: 복습 예정 카드 + 오늘 한도만큼 새 카드 */
+export function buildDailySession(extraNew = 0): SessionItem[] {
+  const stats = getDailyStats();
+  const byGerman = new Map(getAllCards().map((c) => [c.german, c]));
+  const reviews: SessionItem[] = shuffleArr(getDueCards()).map((c) => ({
+    card: byGerman.get(c.german) ?? c,
+    stage: "test",
+    isNew: false,
+  }));
+  const newCount = extraNew > 0 ? extraNew : stats.newRemainingToday;
+  const news: SessionItem[] = getNewCardPool()
+    .slice(0, newCount)
+    .map((c) => ({ card: c, stage: "intro", isNew: true }));
+  return interleave(reviews, news);
+}
+
+/** 한 강 집중 학습: 새 카드·복습 예정 카드는 일정에 반영, 나머지는 연습 */
+export function buildLektionSession(lektionId: number): SessionItem[] {
+  const deck = getDeck();
+  const today = todayStr();
+  const cards = getAllCards().filter((c) => c.lektionId === lektionId);
+  const news: SessionItem[] = [];
+  const reviews: SessionItem[] = [];
+  const practice: SessionItem[] = [];
+  for (const c of cards) {
+    const d = deck[c.german];
+    if (!d) news.push({ card: c, stage: "intro", isNew: true });
+    else if (d.due <= today) reviews.push({ card: c, stage: "test", isNew: false });
+    else practice.push({ card: c, stage: "test", isNew: false, practice: true });
+  }
+  const scheduled = interleave(shuffleArr(reviews), news);
+  // 새로 배울 것도 복습할 것도 없으면 전체를 연습 모드로
+  return scheduled.length > 0 ? scheduled : shuffleArr(practice);
+}

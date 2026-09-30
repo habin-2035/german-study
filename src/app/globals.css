@@ -37,16 +37,15 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(1200px 600px at 50% -10%, #eef1fb 0%, transparent 60%),
-    var(--bg);
-  background-attachment: fixed;
+  background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-feature-settings: "ss01", "cv01";
 }
 
+/* 컴포넌트 클래스는 components 레이어에 → Tailwind 유틸리티(bg-gradient 등)가 덮어쓸 수 있게 */
+@layer components {
 /* ── Cards ─────────────────────────────────────────── */
 .card {
   background: var(--card);
@@ -93,6 +92,8 @@ body {
   border-radius: 9999px;
   font-weight: 600;
   line-height: 1;
+}
+
 }
 
 /* ── Focus ─────────────────────────────────────────── */
@@ -155,3 +156,5 @@ button:focus-visible {
 
 /* ── Scrollbar ─────────────────────────────────────── */
 * { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+
+kbd { font-family: inherit; }

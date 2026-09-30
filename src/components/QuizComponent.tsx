@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import type { VocabItem, Expression } from "@/types";
 import SpeakerButton from "@/components/SpeakerButton";
 import { isSpeechSupported, speak } from "@/lib/speech";
+import { normalizeDe } from "@/lib/german";
 
 type Card = VocabItem | Expression;
 
@@ -10,17 +11,6 @@ function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-/** 움라우트 없는 키보드 대응: ä→ae, ß→ss 등 정규화 후 비교 */
-function normalizeDe(s: string): string {
-  return s
-    .trim()
-    .toLowerCase()
-    .replace(/ä/g, "ae")
-    .replace(/ö/g, "oe")
-    .replace(/ü/g, "ue")
-    .replace(/ß/g, "ss")
-    .replace(/\s+/g, " ");
-}
 
 // ── 문제 유형 ──────────────────────────────────────────────
 // de→ko/ko→de/listen = 객관식, fill = 빈칸채우기, type = 직접 타이핑

@@ -14,6 +14,10 @@ import {
 import FlashCard from "@/components/FlashCard";
 import QuizComponent from "@/components/QuizComponent";
 import SpeakerButton from "@/components/SpeakerButton";
+import GermanText from "@/components/GermanText";
+import SentenceBreakdown from "@/components/SentenceBreakdown";
+import { getGloss } from "@/lib/gloss";
+import { GRAMMAR } from "@/data/grammar";
 import AddItemForm, { type NewItem } from "@/components/AddItemForm";
 import GermanKeys from "@/components/GermanKeys";
 import {
@@ -34,6 +38,18 @@ export default function LektionPage() {
   const lektionId = Number(id);
   const lektion = getLektionById(lektionId);
   const [tab, setTab] = useState<Tab>("표현");
+  // 문장 해부 펼침 상태
+  const [openAll, setOpenAll] = useState(false);
+  const [openSet, setOpenSet] = useState<Set<string>>(new Set());
+  const isOpen = (g: string) => openAll || openSet.has(g);
+  function toggleOpen(g: string) {
+    setOpenSet((prev) => {
+      const next = new Set(prev);
+      if (next.has(g)) next.delete(g);
+      else next.add(g);
+      return next;
+    });
+  }
   const [prog, setProg] = useState<LektionProgress>({
     completed: false, videoWatched: false, note: "",
     flashcardKnown: [], quizScore: 0,
@@ -130,9 +146,16 @@ export default function LektionPage() {
               <p className="text-slate-400 text-sm mt-0.5">{lektion.subtitle}</p>
             )}
           </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+          <Link
+            href={`/review?lektion=${lektionId}`}
+            className="btn-primary px-4 py-2 rounded-xl text-sm font-bold"
+          >
+            ▶ 집중 학습
+          </Link>
           <button
             onClick={handleToggleCompleted}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex-shrink-0 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
               prog.completed
                 ? "bg-emerald-100 text-emerald-600"
                 : "bg-slate-100 text-slate-500 hover:bg-slate-200"
@@ -140,6 +163,7 @@ export default function LektionPage() {
           >
             {prog.completed ? "✓ 완료" : "완료 체크"}
           </button>
+          </div>
         </div>
 
         {/* Status badges */}
@@ -190,22 +214,52 @@ export default function LektionPage() {
           <div className="flex flex-col gap-6">
             {allExpressions.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-3">핵심 표현</h2>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase">핵심 표현</h2>
+                  <button
+                    onClick={() => { setOpenAll((v) => !v); setOpenSet(new Set()); }}
+                    className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors ${
+                      openAll ? "bg-indigo-500 text-white" : "bg-slate-100 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600"
+                    }`}
+                  >
+                    🔍 모든 문장 해부 {openAll ? "접기" : "펼치기"}
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-400 -mt-1 mb-2">문장을 누르면 단어별 뜻과 관련 문법이 펼쳐져요.</p>
                 <div className="flex flex-col gap-0.5">
-                  {lektion.expressions.map((expr, i) => (
-                    <div key={`b${i}`} className="flex items-start gap-3 py-3 border-b border-slate-50 last:border-0">
-                      <SpeakerButton text={expr.german} size="sm" />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-slate-800">{expr.german}</p>
-                        <p className="text-slate-500 text-sm mt-0.5">{expr.korean}</p>
+                  {lektion.expressions.map((expr, i) => {
+                    const hasGloss = !!getGloss(expr.german);
+                    const open = hasGloss && isOpen(expr.german);
+                    return (
+                      <div key={`b${i}`} className="py-3 border-b border-slate-50 last:border-0">
+                        <div className="flex items-start gap-3">
+                          <SpeakerButton text={expr.german} size="sm" />
+                          <div
+                            className={`flex-1 min-w-0 ${hasGloss ? "cursor-pointer group" : ""}`}
+                            onClick={hasGloss ? () => toggleOpen(expr.german) : undefined}
+                          >
+                            <div className="flex items-center gap-2">
+                              <GermanText german={expr.german} className={`font-semibold text-slate-800 ${hasGloss ? "group-hover:text-indigo-600" : ""}`} />
+                              {hasGloss && (
+                                <span className={`text-[10px] transition-colors ${open ? "text-indigo-500" : "text-slate-300 group-hover:text-indigo-400"}`}>
+                                  {open ? "▲" : "▼ 해부"}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-slate-500 text-sm mt-0.5">{expr.korean}</p>
+                          </div>
+                          {expr.note && (
+                            <span className="text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-lg flex-shrink-0">
+                              {expr.note}
+                            </span>
+                          )}
+                        </div>
+                        {open && (
+                          <SentenceBreakdown german={expr.german} className="mt-3 ml-10 bg-slate-50 rounded-xl p-3 fade-up" />
+                        )}
                       </div>
-                      {expr.note && (
-                        <span className="text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-lg flex-shrink-0">
-                          {expr.note}
-                        </span>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                   {userContent.expressions.map((expr, i) => (
                     <div key={`u${i}`} className="flex items-start gap-3 py-3 border-b border-slate-50 last:border-0">
                       <SpeakerButton text={expr.german} size="sm" />
@@ -237,11 +291,17 @@ export default function LektionPage() {
             {allVocabulary.length > 0 && (
               <section>
                 <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-3">단어</h2>
-                <div className="grid grid-cols-2 gap-2">
+                <p className="text-[11px] text-slate-400 -mt-1 mb-3">
+                  관사 색: <span className="text-sky-600 font-semibold">der</span> ·{" "}
+                  <span className="text-rose-600 font-semibold">die</span> ·{" "}
+                  <span className="text-emerald-600 font-semibold">das</span> ·{" "}
+                  <span className="text-violet-600 font-semibold">복수</span>
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {lektion.vocabulary.map((v, i) => (
                     <div key={`b${i}`} className="bg-slate-50 rounded-xl p-3 hover:bg-indigo-50 transition-colors flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="font-semibold text-slate-800 text-sm">{v.german}</p>
+                        <GermanText german={v.german} showPlural className="font-semibold text-slate-800 text-[15px]" />
                         <p className="text-slate-400 text-xs mt-0.5">{v.korean}</p>
                       </div>
                       <SpeakerButton text={v.german} size="sm" />
@@ -278,7 +338,8 @@ export default function LektionPage() {
                   {lektion.conversations.map((conv, ci) => (
                     <div key={ci} className="bg-slate-50 rounded-2xl p-4 flex flex-col gap-3">
                       {conv.map((line, li) => (
-                        <div key={li} className={`flex gap-2 ${line.speaker === "B" ? "flex-row-reverse" : ""}`}>
+                        <div key={li} className="flex flex-col gap-2">
+                        <div className={`flex gap-2 ${line.speaker === "B" ? "flex-row-reverse" : ""}`}>
                           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                             line.speaker === "A" ? "bg-indigo-600 text-white" : "bg-slate-200 text-slate-600"
                           }`}>
@@ -286,17 +347,25 @@ export default function LektionPage() {
                           </div>
                           <div className={`max-w-[78%] flex flex-col gap-0.5 ${line.speaker === "B" ? "items-end" : "items-start"}`}>
                             <div className={`flex items-center gap-1.5 ${line.speaker === "B" ? "flex-row-reverse" : ""}`}>
-                              <div className={`px-3.5 py-2 rounded-2xl text-sm ${
-                                line.speaker === "A"
-                                  ? "bg-indigo-600 text-white rounded-tl-sm"
-                                  : "bg-white border border-slate-200 text-slate-800 rounded-tr-sm"
-                              }`}>
+                              <button
+                                type="button"
+                                onClick={() => getGloss(line.german) && toggleOpen(line.german)}
+                                className={`px-3.5 py-2 rounded-2xl text-sm text-left transition-shadow ${
+                                  line.speaker === "A"
+                                    ? "bg-indigo-600 text-white rounded-tl-sm"
+                                    : "bg-white border border-slate-200 text-slate-800 rounded-tr-sm"
+                                } ${getGloss(line.german) ? "cursor-pointer hover:ring-2 hover:ring-indigo-200" : "cursor-default"}`}
+                              >
                                 {line.german}
-                              </div>
+                              </button>
                               <SpeakerButton text={line.german} size="sm" />
                             </div>
                             <p className="text-xs text-slate-400 px-1">{line.korean}</p>
                           </div>
+                        </div>
+                        {getGloss(line.german) && isOpen(line.german) && (
+                          <SentenceBreakdown german={line.german} className="bg-white rounded-xl p-3 border border-slate-100 fade-up" />
+                        )}
                         </div>
                       ))}
                     </div>
@@ -314,6 +383,20 @@ export default function LektionPage() {
                       <p className="text-xs font-bold text-amber-700 mb-1">{note.title}</p>
                       <p className="text-sm text-slate-700">{note.content}</p>
                     </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {GRAMMAR.some((g) => g.lessons.includes(lektionId)) && (
+              <section>
+                <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-3">문법 사전에서 자세히</h2>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {GRAMMAR.filter((g) => g.lessons.includes(lektionId)).map((g) => (
+                    <Link key={g.id} href={`/grammar/${g.id}`} className="card card-hover px-4 py-3 flex flex-col">
+                      <span className="text-sm font-bold text-slate-800">📘 {g.title}</span>
+                      <span className="text-xs text-slate-400 mt-0.5">{g.summary}</span>
+                    </Link>
                   ))}
                 </div>
               </section>

@@ -54,7 +54,7 @@ export const curriculum: LektionData[] = [
       {
         title: "독일어 알파벳 이름",
         content:
-          "A(아), B(베), C(체), D(데), E(에), F(에프), G(게), H(하), I(이), J(욧), K(카), L(엘), M(엠), N(엔), O(오), P(페), Q(쿠), R(에르), S(에스), T(테), U(우), V(파우), W(베), X(익스), Y(윕실론), Z(체트)",
+          "A(아), B(베), C(체), D(데), E(에), F(에프), G(게), H(하), I(이), J(요트), K(카), L(엘), M(엠), N(엔), O(오), P(페), Q(쿠), R(에르), S(에스), T(테), U(우), V(파우), W(베), X(익스), Y(윕실론), Z(체트)",
       },
       {
         title: "모음 길이",
@@ -103,7 +103,7 @@ export const curriculum: LektionData[] = [
       {
         title: "Gute Nacht 주의",
         content:
-          "밤에 길을 마주쳤을 때는 Gute Nacht!로 인사하지 않아요. 아무리 높은 밤이라도 Guten Abend!로 인사합니다.",
+          "밤에 길을 마주쳤을 때는 Gute Nacht!로 인사하지 않아요. 아무리 늦은 밤이라도 Guten Abend!로 인사합니다.",
       },
     ],
   },
@@ -144,7 +144,7 @@ export const curriculum: LektionData[] = [
       {
         title: "Wie geht es + 3격",
         content:
-          "Wie geht es mir? (나는), Wie geht es dir? (너는), Wie geht es ihm? (그는), Wie geht es ihr? (그녀는), Wie geht es Ihnen? (당신은)",
+          "Wie geht es dir? (너는), Wie geht es ihm? (그는), Wie geht es ihr? (그녀는), Wie geht es Ihnen? (당신은)",
       },
     ],
   },
@@ -287,7 +287,7 @@ export const curriculum: LektionData[] = [
     grammarNotes: [
       {
         title: "직업 표현 – 관사 없이",
-        content: "Ich bin Student. (O) / Ich bin ein Student. (X) — 직업을 말할 때는 부정관사 ein/eine를 사용하지 않습니다.",
+        content: "Ich bin Student. (O) / Ich bin ein Student. (어색함) — 직업을 말할 때는 보통 부정관사 ein/eine를 쓰지 않습니다. 단, 형용사가 붙으면 관사가 필요해요: Ich bin ein guter Student.",
       },
       {
         title: "von Beruf / als + 직업",
@@ -409,7 +409,7 @@ export const curriculum: LektionData[] = [
       { german: "Wie viel Uhr haben wir jetzt?", korean: "지금 몇 시예요?" },
       { german: "Wie spät ist es?", korean: "몇 시예요?" },
       { german: "Es ist drei Uhr.", korean: "세 시예요." },
-      { german: "Es ist halb neun Uhr morgens.", korean: "아침 8시 30분이에요." },
+      { german: "Es ist halb neun morgens.", korean: "아침 8시 30분이에요." },
       { german: "Wir haben genau 17 Uhr.", korean: "정확히 17시예요.", note: "haben으로 시각 말하기" },
       { german: "Es ist halb vier.", korean: "세 시 반이에요. (4시의 절반)" },
       { german: "Es ist Viertel nach drei.", korean: "세 시 십오 분이에요." },
@@ -776,7 +776,7 @@ export const curriculum: LektionData[] = [
       { german: "die Packung", korean: "팩, 봉지" },
     ],
     expressions: [
-      { german: "Wie viel kostet das?", korean: "얼마예요? (셀 수 없는 것)" },
+      { german: "Wie viel kostet das?", korean: "얼마예요? (가격)" },
       { german: "Wie viele Äpfel?", korean: "사과 몇 개? (셀 수 있는 것)" },
       { german: "Wie viel Geld hast du?", korean: "돈 얼마나 있어?" },
       { german: "Wie viel Zeit hast du noch?", korean: "시간 얼마나 남았어?" },
@@ -953,7 +953,7 @@ export const curriculum: LektionData[] = [
     title: "명령법",
     vocabulary: [],
     expressions: [
-      { german: "Kommen Sie bitte hier.", korean: "여기로 오세요.", note: "Sie-명령형" },
+      { german: "Kommen Sie bitte her.", korean: "이리 오세요.", note: "Sie-명령형" },
       { german: "Komm bitte!", korean: "와!", note: "du-명령형" },
       { german: "Kommt bitte!", korean: "와!", note: "ihr-명령형" },
       { german: "Machen Sie das Fenster auf!", korean: "창문을 여세요!" },
@@ -1268,7 +1268,7 @@ export const curriculum: LektionData[] = [
     grammarNotes: [
       {
         title: "날짜 읽기",
-        content: "der 1. (erste), der 2. (zweite), der 3. (dritte), der 4. (vierte)... 서수에 -e를 붙입니다.",
+        content: "der 1. (erste), der 2. (zweite), der 3. (dritte), der 4. (vierte)... 1~19는 숫자 + -te (vierte, zehnte), 20부터는 + -ste (zwanzigste). 불규칙: erste, dritte, siebte, achte.",
       },
       {
         title: "'~일에' (am + 서수 + n)",
@@ -1295,7 +1295,7 @@ export const curriculum: LektionData[] = [
       { german: "Wie geht es dir?", korean: "어떻게 지내?" },
       { german: "Ich freue mich auf deine Antwort.", korean: "답장 기다릴게." },
       { german: "Liebe Grüße / Alles Liebe", korean: "안녕 / 사랑을 담아 (친근한 마무리)" },
-      { german: "Mit freundlichen Grüßen,", korean: "안녕히 계세요, (격식 마무리)" },
+      { german: "Mit freundlichen Grüßen", korean: "안녕히 계세요, (격식 마무리)" },
     ],
     conversations: [],
     grammarNotes: [],
@@ -1346,7 +1346,7 @@ export const curriculum: LektionData[] = [
       { german: "kühl", korean: "선선한, 서늘한" },
       { german: "warm", korean: "따뜻한" },
       { german: "heiß", korean: "더운" },
-      { german: "das Grad", korean: "도(℃)" },
+      { german: "der Grad", korean: "도(℃)" },
     ],
     expressions: [
       { german: "Wie ist das Wetter heute?", korean: "오늘 날씨 어때요?" },
@@ -1608,7 +1608,7 @@ export const curriculum: LektionData[] = [
     grammarNotes: [
       {
         title: "현재완료 (Perfekt) – 규칙동사",
-        content: "haben + ge-[어간]-t. 예: arbeiten → gearbeitet, kaufen → gekauft, spielen → gespielt",
+        content: "haben + ge-[어간]-(e)t. 어간이 -t/-d로 끝나면 -et. 예: arbeiten → gearbeitet, kaufen → gekauft, spielen → gespielt",
       },
     ],
   },
@@ -1649,7 +1649,7 @@ export const curriculum: LektionData[] = [
       { german: "Meine Frau hat mich immer Schatz genannt.", korean: "아내는 늘 나를 '자기'라고 불렀어요. (nennen)" },
       { german: "Als Kind ist er sehr schnell gerannt.", korean: "어렸을 때 그는 아주 빨리 달렸어요. (rennen)" },
       { german: "Ich habe schon gewusst, er hat mich gern.", korean: "나는 그가 날 좋아하는 걸 이미 알고 있었어요. (wissen)" },
-      { german: "Wir haben kennengelernt.", korean: "우리는 알게 됐어요." },
+      { german: "Wir haben uns kennengelernt.", korean: "우리는 서로 알게 됐어요." },
     ],
     conversations: [],
     grammarNotes: [
@@ -1664,10 +1664,10 @@ export const curriculum: LektionData[] = [
     vocabulary: [],
     expressions: [
       { german: "Ich bin heute spät aufgestanden.", korean: "나는 오늘 늦게 일어났어요." },
-      { german: "Ich habe mein Handy in der Küche gelassen.", korean: "나는 핸드폰을 부엌에 두고 왔어요." },
+      { german: "Ich habe mein Handy in der Küche gelassen.", korean: "나는 핸드폰을 부엌에 두고 왔어요.", note: "lassen → gelassen (분리동사 아님)" },
       { german: "Mein Zug ist pünktlich am Bahnhof angekommen.", korean: "내 기차는 역에 정시에 도착했어요." },
-      { german: "Ich habe den Namen wieder vergessen.", korean: "나는 그 이름을 또 잊어버렸어요." },
-      { german: "Ich habe ein Geschenk bekommen.", korean: "나는 선물을 받았어요." },
+      { german: "Ich habe den Namen wieder vergessen.", korean: "나는 그 이름을 또 잊어버렸어요.", note: "비분리 ver- → ge 없음" },
+      { german: "Ich habe ein Geschenk bekommen.", korean: "나는 선물을 받았어요.", note: "비분리 be- → ge 없음" },
       { german: "Er hat angerufen.", korean: "그는 전화했어요." },
       { german: "Wir haben eingekauft.", korean: "우리는 장을 봤어요." },
     ],
@@ -1778,7 +1778,7 @@ export const curriculum: LektionData[] = [
     conversations: [
       [
         { speaker: "A", german: "Herzlichen Glückwunsch zum Geburtstag!", korean: "생일 진심으로 축하해요!" },
-        { speaker: "B", german: "Danke schön! Das ist sehr nett von dir.", korean: "감사해요! 정말 친절하시네요." },
+        { speaker: "B", german: "Danke schön! Das ist sehr nett von dir.", korean: "고마워! 정말 다정하다." },
       ],
     ],
     grammarNotes: [],
@@ -1793,10 +1793,10 @@ export const curriculum: LektionData[] = [
       { german: "der Mund", korean: "입" },
       { german: "das Ohr (-en)", korean: "귀" },
       { german: "der Hals", korean: "목" },
-      { german: "die Hand (-e)", korean: "손" },
+      { german: "die Hand (¨-e)", korean: "손" },
       { german: "der Arm (-e)", korean: "팔" },
       { german: "das Bein (-e)", korean: "다리" },
-      { german: "der Fuß (-e)", korean: "발" },
+      { german: "der Fuß (¨-e)", korean: "발" },
       { german: "der Bauch", korean: "배" },
       { german: "der Rücken", korean: "등" },
       { german: "der Finger", korean: "손가락" },

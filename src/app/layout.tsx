@@ -22,8 +22,12 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${noto.variable} h-full`}>
       <body className="min-h-full font-[var(--font-noto)]">
-        <Navigation />
-        <main className="max-w-2xl mx-auto px-4 py-6 pb-16">{children}</main>
+        <div className="lg:flex">
+          <Navigation />
+          <main className="flex-1 min-w-0 px-4 sm:px-8 py-6 lg:py-10 pb-16">
+            <div className="max-w-5xl mx-auto">{children}</div>
+          </main>
+        </div>
       </body>
     </html>
   );
