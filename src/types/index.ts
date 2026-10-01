@@ -77,5 +77,7 @@ export type DailyLog = {
 export type DailyStore = {
   goal: number;       // 하루 목표 카드 수
   newPerDay: number;  // 하루 새 카드 한도
+  rangeFrom?: number; // 새 카드를 가져올 강 범위 (시작, 포함)
+  rangeTo?: number;   // 새 카드를 가져올 강 범위 (끝, 포함)
   days: { [date: string]: DailyLog };
 };

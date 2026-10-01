@@ -99,6 +99,8 @@ export function getDaily(): DailyStore {
     return {
       goal: parsed.goal ?? DEFAULT_GOAL,
       newPerDay: parsed.newPerDay ?? DEFAULT_NEW_PER_DAY,
+      rangeFrom: parsed.rangeFrom,
+      rangeTo: parsed.rangeTo,
       days: parsed.days ?? {},
     };
   } catch {
@@ -114,6 +116,21 @@ export function setDailyGoal(goal: number, newPerDay?: number): void {
   const store = getDaily();
   store.goal = Math.max(5, Math.round(goal));
   if (newPerDay != null) store.newPerDay = Math.max(0, Math.round(newPerDay));
+  saveDaily(store);
+}
+
+/** 새 카드를 가져올 강 범위 [from, to] (포함) */
+export function getNewRange(store: DailyStore = getDaily()): { from: number; to: number } {
+  const last = curriculum[curriculum.length - 1].id;
+  const from = store.rangeFrom ?? 1;
+  const to = store.rangeTo ?? last;
+  return { from: Math.min(from, to), to: Math.max(from, to) };
+}
+
+export function setNewRange(from: number, to: number): void {
+  const store = getDaily();
+  store.rangeFrom = Math.min(from, to);
+  store.rangeTo = Math.max(from, to);
   saveDaily(store);
 }
 
@@ -137,15 +154,18 @@ export function getDueCards(): SrsCard[] {
     .sort((a, b) => (a.due < b.due ? -1 : a.due > b.due ? 1 : a.lapses - b.lapses));
 }
 
-/** 아직 덱에 없는 새 카드들 (교재 순서) */
+/** 아직 덱에 없는 새 카드들 (교재 순서, 설정한 강 범위 안에서만) */
 export function getNewCardPool(): GlobalCard[] {
   const deck = getDeck();
-  return getAllCards().filter((c) => !deck[c.german]);
+  const { from, to } = getNewRange();
+  return getAllCards().filter((c) => !deck[c.german] && c.lektionId >= from && c.lektionId <= to);
 }
 
 export type DailyStats = {
   goal: number;
   newPerDay: number;
+  rangeFrom: number;
+  rangeTo: number;
   doneToday: number;      // 오늘 복습+새카드 합
   reviewsToday: number;
   newsToday: number;
@@ -167,6 +187,8 @@ export function getDailyStats(): DailyStats {
   return {
     goal: store.goal,
     newPerDay: store.newPerDay,
+    rangeFrom: getNewRange(store).from,
+    rangeTo: getNewRange(store).to,
     reviewsToday: todayLog.reviews,
     newsToday: todayLog.news,
     doneToday: todayLog.reviews + todayLog.news,

@@ -88,7 +88,7 @@ export default function HomePage() {
                 {toStudy > 0 ? <>{toStudy}장 준비됐어요</> : "오늘 분량 완료 ✨"}
               </p>
               <p className="text-indigo-100/90 text-sm mt-1">
-                {stats ? <>복습 {stats.dueCount} · 새 카드 {stats.newRemainingToday} · 한국어 보고 독일어 입력</> : " "}
+                {stats ? <>복습 {stats.dueCount} · 새 카드 {stats.newRemainingToday} (L{String(stats.rangeFrom).padStart(2, "0")}–L{String(stats.rangeTo).padStart(2, "0")})</> : " "}
               </p>
             </div>
             <div className="hidden sm:flex flex-col items-end gap-1.5 flex-shrink-0">
