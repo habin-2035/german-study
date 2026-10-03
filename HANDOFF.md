@@ -25,8 +25,8 @@
 - curriculum 문장을 바꾸면 gloss 키도 같이 바꿀 것
 
 ## 진행 상황 (2026-10-03)
-- 완료·배포됨: 입력형 학습 세션, 명사 성·복수, PC 사이드바 레이아웃, 백업, 문장 해부, 문법 사전, 교재 오류 수정 (커밋 dc3837e)
-- **완료·미배포**: 오늘의 학습 새 카드 범위 설정 (커밋 ba90649 + 이 문서). main에 push하면 배포됨
+- 모두 배포됨: 입력형 학습 세션, 명사 성·복수, PC 사이드바 레이아웃, 백업, 문장 해부, 문법 사전, 교재 오류 수정, 새 카드 강 범위 설정
+- push가 키체인 인증으로 실패하면: `git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin main`
 - 알려진 미해결: 기존 ESLint `react-hooks/set-state-in-effect` 오류 다수 (localStorage를 effect에서 읽는 기존 패턴, 빌드엔 영향 없음). 모바일 폭 화면은 직접 확인 못 함
 
 ## 다음 후보
