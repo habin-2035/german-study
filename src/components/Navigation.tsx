@@ -7,6 +7,7 @@ import { getDailyStats, type DailyStats } from "@/lib/srs";
 const links = [
   { href: "/", label: "홈", icon: "⌂" },
   { href: "/review", label: "오늘의 학습", short: "학습", icon: "▶" },
+  { href: "/words", label: "A1 단어장", short: "단어", icon: "W" },
   { href: "/practice", label: "묶음 연습", short: "연습", icon: "◫" },
   { href: "/grammar", label: "문법 사전", short: "문법", icon: "§" },
   { href: "/progress", label: "학습 현황", short: "현황", icon: "▤" },
@@ -89,13 +90,14 @@ export default function Navigation() {
             <span className="hidden sm:inline text-slate-900 font-black text-sm tracking-tight">ZUSAMMEN</span>
           </Link>
           <nav className="flex items-center gap-0.5">
+            {/* 홈은 로고로 가므로 좁은 화면에선 숨김 */}
             {links.map(({ href, label, short }) => {
               const active = isActive(href);
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`relative px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`relative px-2 sm:px-2.5 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${href === "/" ? "hidden sm:block " : ""}${
                     active ? "bg-indigo-50 text-indigo-600" : "text-slate-500 hover:text-slate-800"
                   }`}
                 >

@@ -18,6 +18,11 @@
 - `src/lib/german.ts` — 입력 채점 (ae/oe/ue/ss 허용, 관사 판정, 오타 허용, 대안 표기 `A / B`, `Lehrer(in)`, `...` 틀 문장은 자가채점)
 - `src/lib/tokenize.ts` — 문장 토큰화 (gloss 키·단어 순서의 기준)
 - `src/components/StudySession.tsx` — 입력/카드 모드 학습 세션, 단축키 Enter / 1–4 / Tab(힌트) / R(듣기)
+- **A1 단어장** `/words` — Goethe-Zertifikat A1 공식 Wortliste 789개, 19개 주제별 플래시카드 (교재 SRS와 별개)
+  - `src/data/words-a1.json`(데이터) + `words-a1.ts`(타입·주제). **기록 키 = `de` 필드**라 표기를 바꾸면 그 단어 기록이 끊김
+  - `src/lib/words.ts` — 상자식 복습(알면 1→2→4→8→16→32일, 모르면 오늘 다시), 상자 4 이상 = '외움'. 저장 키 `gs_words_v1`, 설정 `gs_words_pref_v1`
+  - `src/components/WordFlashSession.tsx` — 뒤집기 카드, Space / 1 모름 / 2 알아요 / R 발음, 모른 카드는 4장 뒤 다시
+  - 데이터 검증(2026-10-10): 성·복수·동사 변화를 de.wiktionary와 자동 대조(명사 386·복수 300·동사 153 일치), 뜻·예문은 독립 검수 + 수동 전수 검토. 예문은 직접 작성(Goethe 예문 복제 아님)
 
 ## gloss 데이터를 고칠 때
 - 단어 목록은 `tokenize(문장)` 결과와 정확히 같은 순서·표기여야 함
@@ -29,7 +34,11 @@
 - push가 키체인 인증으로 실패하면: `git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin main`
 - 알려진 미해결: 기존 ESLint `react-hooks/set-state-in-effect` 오류 다수 (localStorage를 effect에서 읽는 기존 패턴, 빌드엔 영향 없음). 모바일 폭 화면은 직접 확인 못 함
 
+## 진행 상황 (2026-10-10)
+- A1 단어장 추가 (`/words`, 사이드바 'A1 단어장', 모바일 '단어'). 모바일 상단 메뉴에서 '홈'은 로고로 대체해 숨김
+
 ## 다음 후보
+- A2 단어장 (Goethe A2 Wortliste로 같은 방식: 생성 → wiktionary 대조 → 검수)
 1. 모든 단어에 예문(+해석) 붙이기 — `VocabItem.example/exampleKorean` 필드가 이미 있고 세션에서 표시됨
 2. 회화 역할극 (B 역할을 입력/말하기로)
 3. 문법 드릴 (동사 변화, 3·4격)
