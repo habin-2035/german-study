@@ -10,6 +10,18 @@ const KEY = "gs_words_v1";
 const BOX_DAYS = [0, 1, 2, 4, 8, 16, 32];
 export const MASTERED_BOX = 4;
 
+/** 단어장 화면 설정(주제·모드 등) 저장 키 */
+export const WORD_PREF_KEY = "gs_words_pref_v1";
+
+/** 단어장에서 고를 주제를 미리 정해 둔다 (다른 설정은 유지) */
+export function setWordTopics(topics: TopicId[]): void {
+  try {
+    const raw = localStorage.getItem(WORD_PREF_KEY);
+    const prev = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
+    localStorage.setItem(WORD_PREF_KEY, JSON.stringify({ ...prev, topics }));
+  } catch {}
+}
+
 export type WordRecord = {
   box: number;
   due: string;   // yyyy-mm-dd

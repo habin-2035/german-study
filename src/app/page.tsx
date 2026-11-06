@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { BAND_TITLES, curriculum, getLektionsByBand, TOTAL_BANDS, TOTAL_LEKTIONS } from "@/data/curriculum";
 import { getAllProgress } from "@/lib/storage";
 import { getAllCards, getDailyStats, type DailyStats } from "@/lib/srs";
+import PlanCard from "@/components/PlanCard";
 import type { AllProgress } from "@/types";
 
 const BAND_COLORS: Record<number, string> = {
@@ -118,6 +119,9 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* 2달 계획 */}
+      <PlanCard />
 
       {/* 숫자 요약 */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

@@ -2,13 +2,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { TOPICS, WORDS, POS_LABEL, type TopicId, type Word } from "@/data/words-a1";
 import {
-  buildWordSession, getWordProgress, topicStats, MODE_LABELS, MASTERED_BOX,
+  buildWordSession, getWordProgress, topicStats, MODE_LABELS, MASTERED_BOX, WORD_PREF_KEY,
   type SessionMode, type TopicStat, type WordProgress,
 } from "@/lib/words";
 import WordFlashSession, { WordDe, WordForms, type Direction } from "@/components/WordFlashSession";
 import SpeakerButton from "@/components/SpeakerButton";
 
-const PREF_KEY = "gs_words_pref_v1";
 const LIMITS = [10, 20, 30, 0];
 
 type Prefs = { topics: TopicId[]; mode: SessionMode; direction: Direction; limit: number };
@@ -16,7 +15,7 @@ const DEFAULT_PREFS: Prefs = { topics: [], mode: "smart", direction: "de-ko", li
 
 function loadPrefs(): Prefs {
   try {
-    const raw = localStorage.getItem(PREF_KEY);
+    const raw = localStorage.getItem(WORD_PREF_KEY);
     return raw ? { ...DEFAULT_PREFS, ...(JSON.parse(raw) as Partial<Prefs>) } : DEFAULT_PREFS;
   } catch {
     return DEFAULT_PREFS;
@@ -47,7 +46,7 @@ export default function WordsPage() {
     setPrefs((prev) => {
       const next = { ...prev, ...patch };
       try {
-        localStorage.setItem(PREF_KEY, JSON.stringify(next));
+        localStorage.setItem(WORD_PREF_KEY, JSON.stringify(next));
       } catch {}
       return next;
     });
